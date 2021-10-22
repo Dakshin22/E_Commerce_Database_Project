@@ -31,8 +31,15 @@ const ListItems = () => {
         getCartItems();
       }, []);
 
-      console.log(items)
+      let subTotal = items.reduce(function (accumulator, item) {
+        return accumulator + item.price;
+      }, 0);
 
+      let shipping = 4.99; // for now nothing
+
+      let totalPrice = subTotal + shipping;
+
+      console.log(totalPrice)
 
     return (
         <div class="container">
@@ -62,6 +69,36 @@ const ListItems = () => {
           ))}
     </tbody>
   </table>
+
+  <div class="row">
+      <div class="col">
+          <div class="row justify-content-between">
+              <div class="col-4">
+                  <p class="mb-1"><b>Subtotal</b></p>
+              </div>
+              <div class="flex-sm-col col-auto">
+                  <p class="mb-1"><b> {subTotal.toFixed(2)} USD</b></p>
+              </div>
+          </div>
+          <div class="row justify-content-between">
+              <div class="col">
+                  <p class="mb-1"><b>Shipping</b></p>
+              </div>
+              <div class="flex-sm-col col-auto">
+                  <p class="mb-1"><b>{shipping} USD</b></p>
+              </div>
+          </div>
+          <div class="row justify-content-between">
+              <div class="col-4">
+                  <p><b>Total</b></p>
+              </div>
+              <div class="flex-sm-col col-auto">
+                  <p class="mb-1"><b>{totalPrice.toFixed(2)} USD</b></p>
+              </div>
+          </div>
+          
+      </div>
+  </div>
 </div>
     )
 }
