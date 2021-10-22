@@ -42,8 +42,8 @@ const ListItems = () => {
       <tr>
         <th>Item</th>
         <th>Price</th>
-        <th>Qty</th>
-        <th>Discard</th>
+        <th class="text-center">Qty</th>
+        <th class="text-center">Discard</th>
 
       </tr>
     </thead>
@@ -51,11 +51,13 @@ const ListItems = () => {
             {items.map(item => (
             <tr key={item.itemid}>
               <td>{item.title}</td>
-              <td>{item.price}</td>
-              <td>placeholder</td>
-              <button type="button" class="btn btn-default btn-sm ml-4" onClick = {() => deleteCartItem(item.itemid)}>
+              <td >{item.price}</td>
+              <td class="text-center" >placeholder</td>
+              <div class="col text-center">
+              <button type="button" class="btn btn-default btn-sm " onClick = {() => deleteCartItem(item.itemid)}>
                 <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
+                </div>
             </tr>
           ))}
     </tbody>

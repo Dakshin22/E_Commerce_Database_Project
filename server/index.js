@@ -21,7 +21,7 @@ app.use(express.json()); //req.body
 // })
  
 // updating item value
-app.put("/placeholder/:id", async(req, res) => {
+app.put("/cart-items/:id", async(req, res) => {
 
   try {
     const { id } = req.params;
@@ -35,11 +35,23 @@ app.put("/placeholder/:id", async(req, res) => {
 })
 
 
-// temp cartitem, need to change the query
+// temp cartitem, need to change the query, used to display items in shopping cart
 app.get("/cart-items", async(req, res) => {
 
   try {
     const itemsincart = await pool.query("SELECT * from item limit 10");
+    res.json(itemsincart.rows);
+
+  } catch (err) {
+    console.error(err.message)
+  }
+})
+
+app.delete("/cart-items/:id", async(req, res) => {
+
+  try {
+    const { id } = req.params;
+    const itemsincart = await pool.query("DELETE FROM item WHERE itemid = $1", [id]);
     res.json(itemsincart.rows);
 
   } catch (err) {
