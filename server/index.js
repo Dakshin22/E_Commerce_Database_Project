@@ -34,6 +34,22 @@ app.put("/placeholder/:id", async(req, res) => {
   }
 })
 
+
+// temp cartitem, need to change the query
+app.get("/cart-items", async(req, res) => {
+
+  try {
+    const itemsincart = await pool.query("SELECT * from item limit 10");
+    res.json(itemsincart.rows);
+
+  } catch (err) {
+    console.error(err.message)
+  }
+})
+
+// todo implemenet delete cart item
+// need to know how we'll represent items in cart first
+
 app.listen(5000, () => {
     console.log("server has started on port 5000");
   });
