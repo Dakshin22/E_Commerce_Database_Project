@@ -9,15 +9,22 @@ app.use(express.json()); //req.body
 
 
 //add to cart
+/**
+ * Post request
+ * adds entry to PurchaseContainsItem talbe
+ * needs username, purchaseid, itemid, and quantity
+ */
 app.post("/addToCart", async (req, res) => {
   try {
-    const { description } = req.body;
-    const newItem = await pool.query(
-      "INSERT INTO OrderContainsItem (description) VALUES($1) RETURNING *",
-      [description]
+    const { username } = req.body;
+    const { purchaseid } = req.body;
+    const { itemid } = req.body;
+    const newPurchaseEntry = await pool.query(
+      "INSERT INTO OrderContainsItem (username) VALUES($1) (purchaseid) VALUES($2) (itemid) VALUES($3) RETURNING *",
+      [username, purchaseid, itemid]
     );
 
-    res.json(newTodo.rows[0]);
+    res.json(newPurchaseEntry.rows);
   } catch (error) {
     console.error(error.message);
   }
@@ -25,11 +32,11 @@ app.post("/addToCart", async (req, res) => {
 
 
 //start order
-app.post("/newOrder", async (req, res) => {
+app.post("/newPurchase", async (req, res) => {
   try {
     const { description } = req.body;
     const newOrder = await pool.query(
-      "INSERT INTO Order (description) VALUES($1) RETURNING *",
+      "INSERT INTO Purchase (description) VALUES($1) RETURNING *",
       [description]
     );
 
@@ -49,11 +56,11 @@ app.get("/orders", async (req, res) => {
   }
 });
 
-//get items
+//get all items
 app.get("/items", async (req, res) => {
   try {
-    const allItems = await pool.query("SELECT * FROM Items");
-    res.json(allTodos.rows);
+    const allItems = await pool.query("SELECT * FROM item");
+    res.json(allItems.rows);
   } catch (error) {
     console.error(error.message);
   }
