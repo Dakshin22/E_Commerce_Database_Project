@@ -5,6 +5,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import IconButton from '@mui/material/IconButton';
 
 const ItemCard = (props) => {
   const { title } = props;
@@ -30,7 +32,13 @@ const ItemCard = (props) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Add to Cart</Button>
+        <IconButton
+            size="large"
+            aria-label="addShoppingCart"
+            sx={{ mr: 2 }}
+          >
+            <AddShoppingCartIcon />
+          </IconButton>
         </CardActions>
       </Card>
     </>
