@@ -76,7 +76,7 @@ app.get("/pastPurchases", async (req, res) => {
 //get all items available
 app.get("/items", async (req, res) => {
   try {
-    const allItems = await pool.query("SELECT * FROM item LIMIT 10");
+    const allItems = await pool.query("SELECT * FROM item LIMIT 9");
     res.json(allItems.rows);
   } catch (error) {
     console.error(error.message);
