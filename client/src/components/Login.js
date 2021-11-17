@@ -1,12 +1,12 @@
 import Axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
+import Transfer from "./Transfer";
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginStatus, setLoginStatus] = useState('')
-    
 
     const userLogin = async e =>{
         e.preventDefault();
@@ -17,7 +17,18 @@ const Login = () => {
                 setLoginStatus(response.data.message)
                 
             else
+            {
                 setLoginStatus(response.data[0].username)
+                return (
+                <Fragment>
+                    <Transfer username = {loginStatus}/>
+                    <Redirect to= '/transfer'/>
+                </Fragment>)
+                
+                // go to items page and transfer loginStatus state variable
+
+            }
+                
         })           
     }
 
