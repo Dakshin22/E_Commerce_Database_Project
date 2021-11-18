@@ -1,8 +1,6 @@
 import Axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
-import { render } from "react-dom";
+import React, { Fragment, useState } from "react";
 import {Link, useHistory} from 'react-router-dom'
-import Transfer from "./Transfer";
 
 const Login = () => {
     const [username, setUsername] = useState('');
