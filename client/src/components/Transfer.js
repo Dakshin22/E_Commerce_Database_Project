@@ -1,7 +1,17 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState} from "react";
+import { useLocation } from 'react-router-dom';
 
-const Transfer = ({username}) =>
+const Transfer = props =>
 {
-    return <h1>Hi {username}</h1>;
+    const location = useLocation();
+
+    useEffect(() => 
+    {
+        console.log(location)
+        // console.log(location.pathname)
+        
+    }, [location])
+
+    return <h2>{location.state.username}</h2>
 }
 export default Transfer;

@@ -8,10 +8,10 @@ const e = require("express");
 app.use(cors());
 app.use(express.json()); //req.body
 
-app.get('/:username/:password', async (req, res) =>{
+app.post('/', async (req, res) =>{
   try
   {
-    const {username, password} = req.params
+    const {username, password} = req.body
     const userInfo = await pool.query(
       'SELECT username, password FROM users WHERE username = $1 AND password = $2', [username, password]
       )

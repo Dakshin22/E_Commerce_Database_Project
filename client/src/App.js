@@ -10,12 +10,10 @@ function App() {
   return (
     <Router>
       <Fragment>
-        <div classname = 'container'>
-          <Switch>
-          <Route path = '/transfer' component = {Transfer}/>
-          <Route path = '/' exact component = {Login} /> {/* you can set the path as '/' as well for when the server loads*/}
-          <Route path = '/register' component = {Register} />
-          </Switch>
+        <div classname = 'container'>   
+          <Route exact path = '/transfer' component = {Transfer}/>
+          <Route exact path = '/' component = {Login} />
+          <Route exact path = '/register' component = {Register} />
         </div>
       </Fragment>
     </Router>
