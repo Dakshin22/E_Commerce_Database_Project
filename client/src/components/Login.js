@@ -1,13 +1,13 @@
 import Axios from "axios";
 import React, { Fragment, useState } from "react";
-import {Link, useHistory} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [invalidLogin, setInvalidLogin] = useState('')
     
-    let history = useHistory()
+    let navigate = useNavigate()
     
     const userLogin = async e =>{
         e.preventDefault();
@@ -24,18 +24,18 @@ const Login = () => {
                 setInvalidLogin(response.data.message)             
             else
             {               
-                history.push({pathname: '/transfer', state: {username: username}})               
+                navigate('/transfer', {state: {username: username}})               
             }
         })         
     }
 
     return (
         <Fragment>
-            <h1 className='text-center mt-5'>Login</h1>
-            <div style = {{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <div className = 'mt-5 mr-5' style = {{display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <form onSubmit = {userLogin}>
                     <div className="form-group row">
                         <div>
+                            <small id = "loginStatus" class = "text-danger">{invalidLogin}</small>
                             <input
                                 type="text"
                                 maxLength = "20"
@@ -58,8 +58,7 @@ const Login = () => {
                     <Link to = '/register'>
                         <button type='button' className="btn btn-success ml-3">Register</button>
                     </Link>
-                </form> 
-                <h2>{invalidLogin}</h2>               
+                </form>             
             </div>   
 
                   

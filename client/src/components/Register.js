@@ -1,6 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Axios from 'axios'
-import {Button, Box, TextField, Grid} from '@mui/material'
+import { Button, Box, TextField, Grid, Container, Stack } from '@mui/material'
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -8,32 +11,38 @@ const Register = () => {
     const [fname, setfname] = useState('');
     const [lname, setlname] = useState('');
     const [address, setAddress] = useState('');
-    const [DOB, setDOB] = useState('');
+    const [DOB, setDOB] = useState(null);
 
     // do this after clicking the register button
     const registerUser = () => {
-        Axios.post('http://localhost:5000/register', 
-        {
-            username: username,
-            password: password,
-            fname: fname,
-            lname: lname,
-            address: address,
-            DOB: DOB
-        }).then(response => {console.log(response)})
+        Axios.post('http://localhost:5000/register',
+            {
+                username: username,
+                password: password,
+                fname: fname,
+                lname: lname,
+                address: address,
+                DOB: DOB
+            }).then(response => { console.log(response) })
     }
     return (
-        <Box
-        sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',  
-        }}  
+        <Container
+            maxWidth="sm"
+            style={{ borderStyle: "dashed" }}
         >
-            <Box component="form" noValidate onSubmit={registerUser} sx={{ mt: 3 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: "center",
+                    borderStyle: "dashed"
+                }}
+                component="form"
+                noValidate onSubmit={registerUser}
+            >
+                <Grid sx={{ borderStyle: "solid", borderColor: "blue" }} container spacing={2}>
+                    <Grid item xs={4} md={6} lg={6}>
                         <TextField
                             autoComplete="given-name"
                             name="firstName"
@@ -42,9 +51,10 @@ const Register = () => {
                             id="firstName"
                             label="First Name"
                             autoFocus
+                            onChange={e => setfname(e.target.value)}                             
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={4} md={6} lg={6}>
                         <TextField
                             required
                             fullWidth
@@ -52,9 +62,10 @@ const Register = () => {
                             label="Last Name"
                             name="lastName"
                             autoComplete="lastName"
+                            onChange={e => setlname(e.target.value)}    
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4} md={12} lg={12}>
                         <TextField
                             required
                             fullWidth
@@ -62,9 +73,10 @@ const Register = () => {
                             label="Username"
                             name="username"
                             autoComplete="username"
+                            onChange={e => setUsername(e.target.value)} 
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4} md={12} lg={12}>
                         <TextField
                             required
                             fullWidth
@@ -73,9 +85,10 @@ const Register = () => {
                             type="password"
                             id="password"
                             autoComplete="new-password"
+                            onChange={e => setPassword(e.target.value)} 
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={4} md={12} lg={12}>
                         <TextField
                             required
                             fullWidth
@@ -84,21 +97,31 @@ const Register = () => {
                             type="Address"
                             id="Address"
                             autoComplete="Address"
+                            onChange={e => setAddress(e.target.value)} 
                         />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Register
-                        </Button>
                     </Grid>
+                    <Grid item xs={4} md={6} lg={6} >
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                                label="DOB"
+                                inputFormat="yyyy-MM-dd"
+                                value={DOB}
+                                onChange={(newDOB) => setDOB(newDOB)} 
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, marginX: 5 }}
+                    >
+                        Register
+                    </Button>
                 </Grid>
-            </Box>  
-        </Box>
-        
-        
+            </Box>
+        </Container >
     );
 }
 

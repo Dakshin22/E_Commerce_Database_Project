@@ -3,15 +3,15 @@ import { useLocation } from 'react-router-dom';
 
 const Transfer = props =>
 {
-    const location = useLocation();
+    const {state} = useLocation();
 
     useEffect(() => 
     {
-        console.log(location)
+        console.log(state)
         // console.log(location.pathname)
         
-    }, [location])
+    }, [state])
 
-    return <h2>{location.state.username}</h2>
+    return <h2>{state}</h2>
 }
 export default Transfer;

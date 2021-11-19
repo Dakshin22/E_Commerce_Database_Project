@@ -27,11 +27,11 @@ function App() {
         <div className="App">
           <Navbar />
           <div id="page-body">
-            <Routes>               
-              <Route exact path = '/transfer' component = {Transfer}/>
-              <Route exact path = '/' component = {Login} />
-              <Route exact path = '/register' component = {Register} />
-              <Route path="/items" element={<ItemsPage/>} exact />
+            <Routes>              
+              <Route path = "/transfer" element = {<Transfer/>}/>
+              <Route path = "/login" element = {<Login/>}/>
+              <Route path = "/register" element = {<Register/>}/>
+              <Route exact path = "/" element={<ItemsPage/>}/>
             </Routes>
           </div>
         </div>

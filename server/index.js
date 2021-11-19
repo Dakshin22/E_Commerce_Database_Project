@@ -16,7 +16,7 @@ app.post('/', async (req, res) =>{
       'SELECT username, password FROM users WHERE username = $1 AND password = $2', [username, password]
       )
     if (userInfo.rowCount == 0)
-      res.send({message: 'Invalid username or password, please try again'})
+      res.send({message: 'Invalid credentials, please try again'})
     else
       res.json(userInfo.rows)
   }
