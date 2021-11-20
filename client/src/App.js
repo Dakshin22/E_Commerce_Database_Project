@@ -1,6 +1,11 @@
 import React, { Fragment, useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import "./App.css";
@@ -29,21 +34,12 @@ function App() {
         <Paper>
           <Router>
             <div className="App">
-              <Navbar />
+              <Navbar userInfo={userInfo} setUser = {setUserInfo}/>
               <div id="page-body">
                 <Routes>
-                  <Route
-                    path="/"
-                    element={<Login setUser={setUserInfo} />}
-                  />
+                  <Route path="/" element={<Login setUser={setUserInfo} />} />
                   <Route path="/register" element={<Register />} />
-                  <Route exact path="/itemsPage">
-                    {userInfo.isLoggedIn ? (
-                      <ItemsPage userInfo={userInfo} />
-                    ) : (
-                      <Login setUser={setUserInfo}/>
-                    )}
-                  </Route>
+                  <Route exact path="/itemsPage" element={<ItemsPage userInfo={userInfo}/>} />
                 </Routes>
               </div>
             </div>
