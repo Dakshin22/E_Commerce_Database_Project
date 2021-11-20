@@ -126,11 +126,11 @@ app.put("/updateQuantity", async (req, res) => {
   }
 });
 
-// temp cartitem, need to change the query, used to display items in shopping cart
+// right now only returning title and price, can be changed to whats needed
 app.get("/itemsInCart", async (req, res) => {
   try {
     const { username } = req.body;
-    const itemsincart = await pool.query("SELECT * from item limit 10");
+    const itemsincart = await pool.query("SELECT title, i.price FROM item i JOIN purchasecontainsitem c ON i.itemid = c.itemid JOIN purchase p ON c.purchaseid = p.purchaseid WHERE c.username = $1 AND p.finished = FALSE");
     res.json(itemsincart.rows);
   } catch (err) {
     console.error(err.message);
@@ -144,8 +144,8 @@ app.delete("/cart-items/:id", async (req, res) => {
     const { username } = req.body;
     const { purchaseid } = req.body;
     const itemsincart = await pool.query(
-      "DELETE FROM purchaseContainsItem WHERE itemid = $1 AND purchaseid = $2 AND username = $3",
-      [id, purchaseid, username]
+      "DELETE FROM purchasecontainsitem WHERE username = $1 AND itemid = $2 and purchaseid = $3",
+      [username, id, purchaseid]
     );
     res.json(`Item with id ${id} deleted from Cart`);
   } catch (err) {
