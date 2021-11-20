@@ -1,10 +1,8 @@
 import React, {Fragment} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-
 import Login from './components/Login'
 import Register from './components/Register'
-import Transfer from './components/Transfer';
 import "./App.css";
 import Navbar from "./utilities/NavBar";
 import ItemsPage from "./pages/ItemsPage";
@@ -27,8 +25,7 @@ function App() {
         <div className="App">
           <Navbar />
           <div id="page-body">
-            <Routes>              
-              <Route path = "/transfer" element = {<Transfer/>}/>
+            <Routes>                           
               <Route path = "/login" element = {<Login/>}/>
               <Route path = "/register" element = {<Register/>}/>
               <Route exact path = "/" element={<ItemsPage/>}/>

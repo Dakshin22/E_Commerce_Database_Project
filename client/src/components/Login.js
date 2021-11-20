@@ -23,8 +23,9 @@ const Login = () => {
             if (response.data.message)
                 setInvalidLogin(response.data.message)             
             else
-            {               
-                navigate('/transfer', {state: {username: username}})               
+            {
+                setInvalidLogin('');               
+                navigate('/', {state: {username: username }})               
             }
         })         
     }
