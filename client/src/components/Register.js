@@ -38,7 +38,7 @@ const Register = () => {
                 else
                 {
                     setErrorMsg('');
-                    navigate("/login");
+                    navigate("/");
                 }                                      
             })
             }

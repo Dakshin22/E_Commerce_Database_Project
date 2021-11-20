@@ -8,46 +8,56 @@ const e = require("express");
 app.use(cors());
 app.use(express.json()); //req.body
 
-app.post('/', async (req, res) =>{
-  try
-  {
-    const {username, password} = req.body
+app.post("/", async (req, res) => {
+  try {
+    const { username, password } = req.body;
     const userInfo = await pool.query(
-      'SELECT username, password FROM users WHERE username = $1 AND password = $2', [username, password]
-      )
+      "SELECT username, password FROM users WHERE username = $1 AND password = $2",
+      [username, password]
+    );
     if (userInfo.rowCount == 0)
-      res.send({message: 'Invalid credentials, please try again'})
-    else
-      res.json(userInfo.rows)
-  }
-  catch(err)
-  {
+      res.send({ message: "Invalid credentials, please try again" });
+    else res.json(userInfo.rows);
+  } catch (err) {
     console.error(err.message);
   }
-})
+});
 
-app.post('/register', async (req, res) =>{
-  try
-  {
-    const {username, password, fname, lname, address, dob} = req.body;
-    
+app.post("/register", async (req, res) => {
+  try {
+    const { username, password, fname, lname, address, dob } = req.body;
+
     // Only insert a new user if there aren't any other users with the same username
-    const existingUser = await pool.query('SELECT username FROM users WHERE username = $1', [username])
-    if (existingUser.rowCount == 0)
-    {
-      const newUser = await pool.query('INSERT INTO users(username, password, fname, lname, address, DOB) VALUES($1, $2, $3, $4, $5, $6)', 
-      [username, password, fname, lname, address, dob])
-      res.send('added user to database')
-    }
-    else
-      res.send({message: 'The username is already taken'})
-    
-  }
-  catch(err)
-  {
+    const existingUser = await pool.query(
+      "SELECT username FROM users WHERE username = $1",
+      [username]
+    );
+    if (existingUser.rowCount == 0) {
+      const newUser = await pool.query(
+        "INSERT INTO users(username, password, fname, lname, address, DOB) VALUES($1, $2, $3, $4, $5, $6)",
+        [username, password, fname, lname, address, dob]
+      );
+      res.send("added user to database");
+    } else res.send({ message: "The username is already taken" });
+  } catch (err) {
     console.error(err.message);
   }
-})
+});
+
+app.post("/getPurchaseId", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const PurchaseEntry = await pool.query(
+      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished IS false",
+      [username]
+    );
+
+    res.json(PurchaseEntry.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
 //add to cart
 /**
  * Post request
@@ -59,10 +69,23 @@ app.post("/addToCart", async (req, res) => {
     const { username } = req.body;
     const { purchaseid } = req.body;
     const { itemid } = req.body;
-    const newPurchaseEntry = await pool.query(
-      "INSERT INTO PurchaseContainsItem (purchaseid, username, itemid, quantity) VALUES ($1, $2, $3, 1) RETURNING *",
-      [purchaseid, username, itemid]
+    let newPurchaseEntry;
+    let itemAlreadyInCart;
+    itemAlreadyInCart = await pool.query(
+      "SELECT * FROM purchasecontainsitem WHERE username = $1 AND purchaseid = $2 AND itemid = $3",
+      [username, purchaseid, itemid]
     );
+    if (itemAlreadyInCart.rows.length === 0) {
+      newPurchaseEntry = await pool.query(
+        "INSERT INTO PurchaseContainsItem (purchaseid, username, itemid, quantity) VALUES ($1, $2, $3, 1) RETURNING *",
+        [purchaseid, username, itemid]
+      );
+    } else {
+      newPurchaseEntry = await pool.query(
+        "UPDATE purchasecontainsitem SET quantity = $4 WHERE username = $2 AND purchaseid = $1 AND itemid = $3",
+        [purchaseid, username, itemid, itemAlreadyInCart.rows[0].quantity + 1]
+      );
+    }
 
     res.json(newPurchaseEntry.rows);
   } catch (error) {
@@ -81,8 +104,20 @@ app.post("/addToCart", async (req, res) => {
 app.post("/newPurchase", async (req, res) => {
   try {
     const { username } = req.body;
+    const PurchaseEntry = await pool.query(
+      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished IS false",
+      [username]
+    );
+    const purchaseId = PurchaseEntry.rows[0].purchaseid;
+    let deletionItems;
+    if (purchaseId) {
+      deletionItems = await pool.query(
+        "DELETE FROM purchasecontainsitem WHERE username = $1 AND purchaseid = $2",
+        [username, purchaseId]
+      );
+    }
     const deletion = await pool.query(
-      "DELETE FROM Purchase WHERE username = $1",
+      "DELETE FROM Purchase WHERE username = $1 AND finished IS false",
       [username]
     );
     const newPurchase = await pool.query(
@@ -171,7 +206,9 @@ app.put("/updateQuantity", async (req, res) => {
 app.get("/itemsInCart", async (req, res) => {
   try {
     const { username } = req.body;
-    const itemsincart = await pool.query("SELECT title, i.price FROM item i JOIN purchasecontainsitem c ON i.itemid = c.itemid JOIN purchase p ON c.purchaseid = p.purchaseid WHERE c.username = $1 AND p.finished = FALSE");
+    const itemsincart = await pool.query(
+      "SELECT title, i.price FROM item i JOIN purchasecontainsitem c ON i.itemid = c.itemid JOIN purchase p ON c.purchaseid = p.purchaseid WHERE c.username = $1 AND p.finished = FALSE"
+    );
     res.json(itemsincart.rows);
   } catch (err) {
     console.error(err.message);

@@ -2,7 +2,7 @@ import Axios from "axios";
 import React, { Fragment, useState } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 
-const Login = () => {
+const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [invalidLogin, setInvalidLogin] = useState('')
@@ -24,8 +24,9 @@ const Login = () => {
                 setInvalidLogin(response.data.message)             
             else
             {
-                setInvalidLogin('');               
-                navigate('/', {state: {username: username }})               
+                setInvalidLogin('');
+                props.setUser({isLoggedIn:true, username:username})
+                navigate('/itemsPage')               
             }
         })         
     }
