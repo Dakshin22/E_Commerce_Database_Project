@@ -37,7 +37,7 @@ export default function Navbar() {
           >
             <ShoppingCartIcon />
           </IconButton>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href = "/login">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
