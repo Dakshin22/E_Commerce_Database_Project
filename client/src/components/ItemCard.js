@@ -36,6 +36,7 @@ const ItemCard = (props) => {
             size="large"
             aria-label="addShoppingCart"
             sx={{ mr: 2 }}
+            onClick = {()=>{props.addToCart(id)}}
           >
             <AddShoppingCartIcon />
           </IconButton>

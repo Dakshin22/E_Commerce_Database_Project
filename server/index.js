@@ -44,7 +44,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/getPurchaseId", async (req, res) => {
+app.post("/getPurchaseId", async (req, res) => {
   try {
     const { username } = req.body;
     const PurchaseEntry = await pool.query(
@@ -69,10 +69,23 @@ app.post("/addToCart", async (req, res) => {
     const { username } = req.body;
     const { purchaseid } = req.body;
     const { itemid } = req.body;
-    const newPurchaseEntry = await pool.query(
-      "INSERT INTO PurchaseContainsItem (purchaseid, username, itemid, quantity) VALUES ($1, $2, $3, 1) RETURNING *",
-      [purchaseid, username, itemid]
+    let newPurchaseEntry;
+    let itemAlreadyInCart;
+    itemAlreadyInCart = await pool.query(
+      "SELECT * FROM purchasecontainsitem WHERE username = $1 AND purchaseid = $2 AND itemid = $3",
+      [username, purchaseid, itemid]
     );
+    if (itemAlreadyInCart.rows.length === 0) {
+      newPurchaseEntry = await pool.query(
+        "INSERT INTO PurchaseContainsItem (purchaseid, username, itemid, quantity) VALUES ($1, $2, $3, 1) RETURNING *",
+        [purchaseid, username, itemid]
+      );
+    } else {
+      newPurchaseEntry = await pool.query(
+        "UPDATE purchasecontainsitem SET quantity = $4 WHERE username = $2 AND purchaseid = $1 AND itemid = $3",
+        [purchaseid, username, itemid, itemAlreadyInCart.rows[0].quantity + 1]
+      );
+    }
 
     res.json(newPurchaseEntry.rows);
   } catch (error) {
