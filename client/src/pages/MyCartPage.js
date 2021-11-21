@@ -12,6 +12,8 @@ import {
   TableBody,
   TableHead,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { experimentalStyled as styled } from "@mui/material/styles";
 import ItemCard from "../components/ItemCard";
@@ -26,6 +28,7 @@ const MyCartPage = (props) => {
   const [itemsInCart, setItemsInCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     getItemsInCart();
@@ -47,11 +50,9 @@ const MyCartPage = (props) => {
   };
 
   const checkout = async () => {
-
     const url = `http://localhost:5000/checkout`;
 
     try {
-    
       const response = await axios.post(url, {
         username: props.userInfo.username,
         price: totalFormat,
@@ -80,11 +81,35 @@ const MyCartPage = (props) => {
       .reduce((sum, i) => sum + i, 0);
   }
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const deleteItem = async (itemid) => {
+    const url = `http://localhost:5000/removeItem`;
+    console.log(itemid);
+    try {
+      const response = await axios.delete(url, {
+        data: { username: props.userInfo.username, id: itemid },
+      });
+      setItemsInCart();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const invoiceSubtotal = subtotal(itemsInCart);
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-  const invoiceTotal =(invoiceTaxes + invoiceSubtotal);
+  const invoiceTotal = invoiceTaxes + invoiceSubtotal;
   const totalFormat = invoiceTotal.toFixed(2);
-
 
   return (
     <>
@@ -100,22 +125,30 @@ const MyCartPage = (props) => {
                     Details
                   </TableCell>
                   <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">Delete</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Desc</TableCell>
                   <TableCell align="right">Qty.</TableCell>
                   <TableCell align="right">Unit</TableCell>
                   <TableCell align="right">Sum</TableCell>
+                  <TableCell align="right">Delete</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {itemsInCart.map((item, idx) => (
+                  
+                {!(itemsInCart.length === 0) && itemsInCart.map((item, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{item.title}</TableCell>
                     <TableCell align="right">{item.quantity}</TableCell>
                     <TableCell align="right">{item.price}</TableCell>
                     <TableCell align="right">
                       {ccyFormat(priceRow(item.price, item.quantity))}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button onClick={() => {}}>
+                        Delete Item
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -132,18 +165,35 @@ const MyCartPage = (props) => {
                   <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
                     0
                   )} %`}</TableCell>
-                  <TableCell align="right">$ {ccyFormat(invoiceTaxes)}</TableCell>
+                  <TableCell align="right">
+                    $ {ccyFormat(invoiceTaxes)}
+                  </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2}>Total</TableCell>
-                  <TableCell align="right">$ {ccyFormat(invoiceTotal)}</TableCell>
+                  <TableCell align="right">
+                    $ {ccyFormat(invoiceTotal)}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
-          <Button disabled = {itemsInCart.length === 0} onClick={()=>{checkout()}}>Checkout</Button>
+          <Button
+            disabled={itemsInCart.length === 0}
+            onClick={() => {
+              checkout();
+              handleClick();
+            }}
+          >
+            Checkout
+          </Button>
         </div>
       )}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Checkout Successful!
+        </Alert>
+      </Snackbar>
     </>
   );
 };
