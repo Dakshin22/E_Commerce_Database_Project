@@ -227,7 +227,6 @@ app.delete("/removeItem", async (req, res) => {
   try {
     const { id } = req.body;
     const { username } = req.body;
-    console.log(req.body)
     const PurchaseEntry = await pool.query(
       "SELECT purchaseid FROM purchase WHERE username = $1 AND finished = false",
       [username]
