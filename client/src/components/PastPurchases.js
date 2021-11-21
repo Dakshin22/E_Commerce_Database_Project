@@ -11,22 +11,27 @@ import Axios from 'axios';
 
 const PastPurchases = (props) => 
 {
+    console.log(props.userInfo.username)
     const [pastOrders, setPastOrder] = useState([]);
 
     useEffect(() => {
-        console.log(props)
         getpastPurchases();
       }, []);
 
-    const getpastPurchases = async e =>
-    {       
-        console.log(props.userInfo.username);
-        Axios.post('http://localhost:5000/pastPurchases',
+    const getpastPurchases = async () =>
+    {     
+        try
         {
-            username: props.userInfo.username
+            const response = Axios.post('http://localhost:5000/pastPurchases',
+            {
+                username: props.userInfo.username
+            })
         }
-        )
-        .then((response) => {console.log(response)})
+        catch(error)
+        {
+            console.log(error.message)
+        }
+        
     }
     return (
     <Container maxWidth="md">

@@ -39,8 +39,8 @@ function App() {
               <Navbar userInfo={userInfo} setUser = {setUserInfo}/>
               <div id="page-body">
                 <Routes>
-                  <Route path="/orders" element={<PastPurchases userInfo={userInfo}/>} />
                   <Route path="/" element={<Login setUser={setUserInfo} />} />
+                  <Route path="/orders" element={<PastPurchases userInfo={userInfo}/>} />
                   <Route path="/register" element={<Register />} />
                   <Route exact path="/itemsPage" element={<ItemsPage userInfo={userInfo}/>} />
                   <Route exact path="/myCart" element={<MyCartPage userInfo={userInfo}/>} />
