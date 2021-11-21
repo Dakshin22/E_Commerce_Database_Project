@@ -81,7 +81,7 @@ const ItemsPage = (props) => {
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {items.map((groceryItem, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index} align="center">
+              <Grid item xs={2} sm={4} md={2} key={index} align="center">
                 <Container>
                   <ItemCard
                     title={groceryItem.title}

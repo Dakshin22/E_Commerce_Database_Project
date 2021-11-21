@@ -100,12 +100,13 @@ const MyCartPage = (props) => {
       const response = await axios.delete(url, {
         data: { username: props.userInfo.username, id: itemid },
       });
-      setItemsInCart();
+      setItemsInCart(itemsInCart.filter(item => item.itemid !== itemid));
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  let currItems = itemsInCart;
   const invoiceSubtotal = subtotal(itemsInCart);
   const invoiceTaxes = TAX_RATE * invoiceSubtotal;
   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
@@ -141,12 +142,12 @@ const MyCartPage = (props) => {
                   <TableRow key={idx}>
                     <TableCell>{item.title}</TableCell>
                     <TableCell align="right">{item.quantity}</TableCell>
-                    <TableCell align="right">{item.price}</TableCell>
+                    <TableCell align="right">$ {item.price}</TableCell>
                     <TableCell align="right">
-                      {ccyFormat(priceRow(item.price, item.quantity))}
+                      $ {ccyFormat(priceRow(item.price, item.quantity))}
                     </TableCell>
                     <TableCell align="right">
-                      <Button onClick={() => {}}>
+                      <Button onClick={() => {deleteItem(item.itemid)}}>
                         Delete Item
                       </Button>
                     </TableCell>
@@ -157,7 +158,7 @@ const MyCartPage = (props) => {
                   <TableCell rowSpan={3} />
                   <TableCell colSpan={2}>Subtotal</TableCell>
                   <TableCell align="right">
-                    {ccyFormat(invoiceSubtotal)}
+                    $ {ccyFormat(invoiceSubtotal)}
                   </TableCell>
                 </TableRow>
                 <TableRow>

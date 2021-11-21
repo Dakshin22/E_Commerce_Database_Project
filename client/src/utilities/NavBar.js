@@ -47,6 +47,7 @@ export default function Navbar(props) {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick = {() => {navigate('/itemsPage')}}
           >
             <MenuIcon />
           </IconButton>
