@@ -153,7 +153,7 @@ app.get("/pastPurchases", async (req, res) => {
 //get all items available
 app.get("/items", async (req, res) => {
   try {
-    const allItems = await pool.query("SELECT * FROM item LIMIT 9");
+    const allItems = await pool.query("SELECT * FROM item LIMIT 30");
     res.json(allItems.rows);
   } catch (error) {
     console.error(error.message);
@@ -227,7 +227,6 @@ app.delete("/removeItem", async (req, res) => {
   try {
     const { id } = req.body;
     const { username } = req.body;
-    console.log(req.body)
     const PurchaseEntry = await pool.query(
       "SELECT purchaseid FROM purchase WHERE username = $1 AND finished = false",
       [username]

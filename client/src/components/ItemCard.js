@@ -7,10 +7,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 
 const ItemCard = (props) => {
+
+  
   const { title } = props;
-  const { price } = props;
+  let { price } = props;
+  price = price.toFixed(2);
   const { id } = props;
   const { img } = props;
   const { description } = props;
@@ -32,11 +36,15 @@ const ItemCard = (props) => {
           </Typography>
         </CardContent>
         <CardActions>
+        <Typography variant="button" display="block" gutterBottom>
+        ${price}
+      </Typography>
         <IconButton
             size="large"
             aria-label="addShoppingCart"
             sx={{ mr: 2 }}
             onClick = {()=>{props.addToCart(id)}}
+            align = "right"
           >
             <AddShoppingCartIcon />
           </IconButton>
