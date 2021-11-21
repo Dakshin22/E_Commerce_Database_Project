@@ -17,7 +17,7 @@ CREATE TABLE PurchaseContainsItem
     quantity INT,
     PRIMARY KEY(PurchaseID, username, itemID),
     FOREIGN KEY(PurchaseID, username) REFERENCES
-Purchase(PurchaseID, username),
+Purchase(PurchaseID, username) ON DELETE CASCADE,
     FOREIGN KEY(itemID) REFERENCES Item(itemID)
 );
 
