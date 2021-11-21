@@ -136,7 +136,7 @@ app.post("/newPurchase", async (req, res) => {
  * get requests
  * gets all past purchases for a user
  */
-app.get("/pastPurchases", async (req, res) => {
+app.post("/pastPurchases", async (req, res) => {
   try {
     const { username } = req.body;
     const pastPurchase = await pool.query(
@@ -167,17 +167,16 @@ app.get("/items", async (req, res) => {
  */
 app.post("/checkout", async (req, res) => {
   try {
-    const { timestamp } = req.body;
     const { price } = req.body;
     const { username } = req.body;
     const { purchaseid } = req.body;
     const checkedOutPurchase = await pool.query(
-      "UPDATE Purchase SET date = $1, price=$2, finished = TRUE, WHERE username = $3 AND purchaseid = $4",
-      [timestamp, price, username, purchaseid]
+      "UPDATE Purchase SET date = NOW(), price=$1, finished = TRUE WHERE username = $2 AND purchaseid = $3",
+      [price, username, purchaseid]
     );
     const newPastOrder = await pool.query(
-      "INSERT INTO Pastpurchase (pastpurchaseid, username, checkouttime, totalprice) VALUES ($4, $3, $1, $2)",
-      [timestamp, price, username, purchaseid]
+      "INSERT INTO Pastpurchase VALUES ($1, $2, NOW(), $3)",
+      [purchaseid, username, price]
     );
     res.json(newPastOrder.rows[0]);
   } catch (error) {

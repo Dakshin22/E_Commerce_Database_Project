@@ -14,6 +14,7 @@ import ItemsPage from "./pages/ItemsPage";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import CssBaseline from "@mui/material/CssBaseline";
+import PastPurchases from "./components/PastPurchases";
 
 function App() {
   const [userInfo, setUserInfo] = useState({
@@ -37,6 +38,7 @@ function App() {
               <Navbar userInfo={userInfo} setUser = {setUserInfo}/>
               <div id="page-body">
                 <Routes>
+                  <Route path="/orders" element={<PastPurchases userInfo={userInfo}/>} />
                   <Route path="/" element={<Login setUser={setUserInfo} />} />
                   <Route path="/register" element={<Register />} />
                   <Route exact path="/itemsPage" element={<ItemsPage userInfo={userInfo}/>} />
