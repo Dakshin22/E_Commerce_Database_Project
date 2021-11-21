@@ -3,6 +3,7 @@ import axios from "axios";
 import { Box, Grid, Paper, Container } from "@mui/material";
 import { experimentalStyled as styled } from "@mui/material/styles";
 import ItemCard from "../components/ItemCard";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   BrowserRouter as Router,
   Route,
@@ -42,7 +43,7 @@ const ItemsPage = (props) => {
     } catch (error) {
       console.log("error getting purchaseId", error.message);
     }
-
+    console.log("purchase id", purchaseId);
     if (!purchaseId) {
       url = `http://localhost:5000/newPurchase`;
       try {
@@ -72,7 +73,7 @@ const ItemsPage = (props) => {
     <>
       {!props.userInfo.isLoggedIn ? (
         <Navigate to="/" />
-      ) : (
+      ) : 
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -96,7 +97,7 @@ const ItemsPage = (props) => {
             ))}
           </Grid>
         </Box>
-      )}
+      }
     </>
   );
 };

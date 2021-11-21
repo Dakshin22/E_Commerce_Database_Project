@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import MyCartPage from './pages/MyCartPage'
 import "./App.css";
 import Navbar from "./utilities/NavBar";
 import ItemsPage from "./pages/ItemsPage";
@@ -42,6 +43,7 @@ function App() {
                   <Route path="/" element={<Login setUser={setUserInfo} />} />
                   <Route path="/register" element={<Register />} />
                   <Route exact path="/itemsPage" element={<ItemsPage userInfo={userInfo}/>} />
+                  <Route exact path="/myCart" element={<MyCartPage userInfo={userInfo}/>} />
                 </Routes>
               </div>
             </div>

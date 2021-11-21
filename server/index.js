@@ -48,7 +48,7 @@ app.post("/getPurchaseId", async (req, res) => {
   try {
     const { username } = req.body;
     const PurchaseEntry = await pool.query(
-      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished IS false",
+      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished = false",
       [username]
     );
 
@@ -108,16 +108,17 @@ app.post("/newPurchase", async (req, res) => {
       "SELECT purchaseid FROM purchase WHERE username = $1 AND finished IS false",
       [username]
     );
-    const purchaseId = PurchaseEntry.rows[0].purchaseid;
+
     let deletionItems;
-    if (purchaseId) {
+    if (PurchaseEntry.rows.length !== 0) {
+      const purchaseId = PurchaseEntry.rows[0].purchaseid;
       deletionItems = await pool.query(
         "DELETE FROM purchasecontainsitem WHERE username = $1 AND purchaseid = $2",
         [username, purchaseId]
       );
     }
     const deletion = await pool.query(
-      "DELETE FROM Purchase WHERE username = $1 AND finished IS false",
+      "DELETE FROM Purchase WHERE username = $1 AND finished = FALSE",
       [username]
     );
     const newPurchase = await pool.query(
@@ -127,7 +128,7 @@ app.post("/newPurchase", async (req, res) => {
 
     res.json(newPurchase.rows[0]);
   } catch (error) {
-    console.error(error.message);
+    console.error("new Purchase Error: ", error.message);
   }
 });
 
@@ -169,16 +170,22 @@ app.post("/checkout", async (req, res) => {
   try {
     const { price } = req.body;
     const { username } = req.body;
-    const { purchaseid } = req.body;
+    const PurchaseEntry = await pool.query(
+      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished = false",
+      [username]
+    );
+    const purchaseId = PurchaseEntry.rows[0].purchaseid;
     const checkedOutPurchase = await pool.query(
       "UPDATE Purchase SET date = NOW(), price=$1, finished = TRUE WHERE username = $2 AND purchaseid = $3",
-      [price, username, purchaseid]
+
+      [price, username, purchaseId]
     );
     const newPastOrder = await pool.query(
       "INSERT INTO Pastpurchase VALUES ($1, $2, NOW(), $3)",
-      [purchaseid, username, price]
+
+      [purchaseId, username, price]
     );
-    res.json(newPastOrder.rows[0]);
+    res.json("Checked Out!");
   } catch (error) {
     console.error(error.message);
   }
@@ -202,11 +209,12 @@ app.put("/updateQuantity", async (req, res) => {
 });
 
 // right now only returning title and price, can be changed to whats needed
-app.get("/itemsInCart", async (req, res) => {
+app.post("/itemsInCart", async (req, res) => {
   try {
     const { username } = req.body;
     const itemsincart = await pool.query(
-      "SELECT title, i.price FROM item i JOIN purchasecontainsitem c ON i.itemid = c.itemid JOIN purchase p ON c.purchaseid = p.purchaseid WHERE c.username = $1 AND p.finished = FALSE"
+      "SELECT i.title, i.price, c.quantity, i.itemid FROM item i JOIN purchasecontainsitem c ON i.itemid = c.itemid JOIN purchase p ON c.purchaseid = p.purchaseid WHERE c.username = $1 AND p.finished = FALSE",
+      [username]
     );
     res.json(itemsincart.rows);
   } catch (err) {
@@ -215,14 +223,19 @@ app.get("/itemsInCart", async (req, res) => {
 });
 
 // remove item from cart
-app.delete("/cart-items/:id", async (req, res) => {
+app.delete("/removeItem", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const { username } = req.body;
-    const { purchaseid } = req.body;
+    console.log(req.body)
+    const PurchaseEntry = await pool.query(
+      "SELECT purchaseid FROM purchase WHERE username = $1 AND finished = false",
+      [username]
+    );
+    const purchaseId = PurchaseEntry.rows[0].purchaseid;
     const itemsincart = await pool.query(
       "DELETE FROM purchasecontainsitem WHERE username = $1 AND itemid = $2 and purchaseid = $3",
-      [username, id, purchaseid]
+      [username, id, purchaseId]
     );
     res.json(`Item with id ${id} deleted from Cart`);
   } catch (err) {
