@@ -12,7 +12,7 @@ import Axios from 'axios';
 const PastPurchases = (props) => 
 {
     console.log(props.userInfo.username)
-    const [pastOrders, setPastOrder] = useState([]);
+    const [pastOrders, setPastOrders] = useState([]);
 
     useEffect(() => {
         getpastPurchases();
@@ -20,17 +20,14 @@ const PastPurchases = (props) =>
 
     const getpastPurchases = async () =>
     {     
-        try
+        Axios.post('http://localhost:5000/pastPurchases',
         {
-            const response = Axios.post('http://localhost:5000/pastPurchases',
-            {
                 username: props.userInfo.username
-            })
-        }
-        catch(error)
-        {
-            console.log(error.message)
-        }
+        })
+        .then((response) => {
+            console.log(response)
+            setPastOrders(response.data)
+        })
         
     }
     return (
@@ -43,8 +40,14 @@ const PastPurchases = (props) =>
                         <TableCell>Total</TableCell>
                     </TableRow>
                 </TableHead>
-
-            
+            <TableBody>
+                {pastOrders.map((purchase, idx) => (
+                    <TableRow key={idx}>
+                        <TableCell>{purchase.checkouttime}</TableCell>
+                        <TableCell>${purchase.totalprice.toFixed(2)}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>           
             </Table>
         </TableContainer>
     </Container>
