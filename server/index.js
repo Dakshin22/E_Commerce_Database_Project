@@ -137,7 +137,7 @@ app.post("/newPurchase", async (req, res) => {
  * get requests
  * gets all past purchases for a user
  */
-app.get("/pastPurchases", async (req, res) => {
+app.post("/pastPurchases", async (req, res) => {
   try {
     const { username } = req.body;
     const pastPurchase = await pool.query(

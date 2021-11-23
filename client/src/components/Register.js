@@ -12,7 +12,7 @@ const Register = () => {
     const [fname, setfname] = useState('');
     const [lname, setlname] = useState('');
     const [address, setAddress] = useState('');
-    const [DOB, setDOB] = useState('');
+    const [DOB, setDOB] = useState(null);
     const [errorMsg, setErrorMsg] = useState('');
 
     let navigate = useNavigate();
