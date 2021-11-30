@@ -153,7 +153,7 @@ app.post("/pastPurchases", async (req, res) => {
 //get all items available
 app.get("/items", async (req, res) => {
   try {
-    const allItems = await pool.query("SELECT * FROM item LIMIT 30");
+    const allItems = await pool.query("SELECT * FROM item LIMIT 300");
     res.json(allItems.rows);
   } catch (error) {
     console.error(error.message);
@@ -163,7 +163,7 @@ app.get("/items", async (req, res) => {
 //checkout
 /**
  * post request
- * updates purcdhase table with timestamp and price information
+ * updates purchase table with timestamp and price information
  * adds row to pastpurchase table
  */
 app.post("/checkout", async (req, res) => {
