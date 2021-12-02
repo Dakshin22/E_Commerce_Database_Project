@@ -25,8 +25,7 @@ app.post("/", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   try {
-    const { username, password, fname, lname, address, dob } = req.body;
-
+    const { username, password, fname, lname, address, DOB } = req.body;
     // Only insert a new user if there aren't any other users with the same username
     const existingUser = await pool.query(
       "SELECT username FROM users WHERE username = $1",
@@ -35,7 +34,7 @@ app.post("/register", async (req, res) => {
     if (existingUser.rowCount == 0) {
       const newUser = await pool.query(
         "INSERT INTO users(username, password, fname, lname, address, DOB) VALUES($1, $2, $3, $4, $5, $6)",
-        [username, password, fname, lname, address, dob]
+        [username, password, fname, lname, address, DOB]
       );
       res.send("added user to database");
     } else res.send({ message: "The username is already taken" });

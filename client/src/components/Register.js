@@ -5,6 +5,7 @@ import { Button, Box, TextField, Grid, Container} from '@mui/material'
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import format from 'date-fns/format'
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -20,7 +21,7 @@ const Register = () => {
     // do this after clicking the register button
     const registerUser = async e => {
         e.preventDefault();
-        console.log(DOB);
+        setDOB(format(DOB, 'yyyy-MM-dd'));
         Axios.post('http://localhost:5000/register',
             {
                 username: username,
@@ -44,21 +45,19 @@ const Register = () => {
             }
         return (
             <Container
-                maxWidth="sm"
-                style={{ borderStyle: "dashed" }}
+                maxWidth="sm"               
             >
                 <Box
                     sx={{
                         marginTop: 8,
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: "center",
-                        borderStyle: "dashed"
+                        justifyContent: "center",                       
                     }}
                     component="form"
                     noValidate onSubmit={registerUser}
                 >
-                    <Grid sx={{ borderStyle: "solid", borderColor: "blue" }} container spacing={2}>
+                    <Grid container spacing={2}>
                         <Grid item xs={4} md={6} lg={6}>
                             <TextField
                                 autoComplete="given-name"
@@ -123,7 +122,7 @@ const Register = () => {
                                 <DesktopDatePicker
                                     label="DOB"
                                     disableFuture
-                                    inputFormat="yyyy-MM-dd"
+                                    inputFormat="MM-dd-yyyy"
                                     value={DOB}
                                     onChange={(newDOB) => setDOB(newDOB)}
                                     renderInput={(params) => <TextField {...params} />}

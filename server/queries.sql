@@ -27,7 +27,7 @@ CREATE TABLE Purchase
     PurchaseID SERIAL,
     username TEXT NOT NULL,
     Price REAL,
-    Date TIMESTAMP,
+    Date TIMESTAMP without time zone,
     Finished BOOLEAN,
     PRIMARY KEY(PurchaseID, username),
     FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE
@@ -49,7 +49,7 @@ CREATE TABLE PastPurchase
 (
     PastPurchaseID SERIAL,
     username TEXT NOT NULL,
-    checkoutTime TIMESTAMP,
+    checkoutTime TIMESTAMP without time zone,
     totalPrice REAL,
     PRIMARY KEY(PastPurchaseID, username),
     FOREIGN KEY(PastPurchaseID, username) REFERENCES Purchase(PurchaseID, username)
