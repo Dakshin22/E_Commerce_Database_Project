@@ -45,21 +45,19 @@ const Register = () => {
             }
         return (
             <Container
-                maxWidth="sm"
-                style={{ borderStyle: "dashed" }}
+                maxWidth="sm"               
             >
                 <Box
                     sx={{
                         marginTop: 8,
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: "center",
-                        borderStyle: "dashed"
+                        justifyContent: "center",                       
                     }}
                     component="form"
                     noValidate onSubmit={registerUser}
                 >
-                    <Grid sx={{ borderStyle: "solid", borderColor: "blue" }} container spacing={2}>
+                    <Grid container spacing={2}>
                         <Grid item xs={4} md={6} lg={6}>
                             <TextField
                                 autoComplete="given-name"
